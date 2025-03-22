@@ -1,0 +1,176 @@
+project_name: nomad
+run_name: nomad
+
+# training setup
+use_wandb: True # set to false if you don't want to log to wandb
+train: False
+batch_size: 64
+epochs: 10
+gpu_ids: [0]
+num_workers: 4
+lr: 1e-4 
+optimizer: adamw 
+clipping: False
+max_norm: 1.
+scheduler: "cosine"
+warmup: True 
+warmup_epochs: 4
+cyclic_period: 10
+plateau_patience: 3
+plateau_factor: 0.5
+seed: 0
+
+# model params
+model_type: nomad
+vision_encoder: Resnet50
+encoding_size: 256
+dp_encoding_size: 274
+obs_encoder: efficientnet-b0
+attn_unet: False
+cond_predict_scale: False
+mha_num_attention_heads: 4
+mha_num_attention_layers: 4
+mha_ff_dim_factor: 4
+down_dims: [64, 128, 256]
+
+# diffusion model params
+num_diffusion_iters: 10
+
+# mask 
+goal_mask_prob: 0.5
+
+# normalization for the action space
+normalize: True
+
+# context
+context_type: temporal
+context_size: 3 # 5
+alpha: 1e-4
+
+# distance bounds for distance and action and distance predictions 
+distance:
+  min_dist_cat: 0
+  max_dist_cat: 10
+action:
+  min_dist_cat: 3
+  max_dist_cat: 10
+
+# action output params
+len_traj_pred: 8
+learn_angle: False
+
+# dataset specific parameters
+image_size: [224, 224] # width, height
+
+
+
+#point net params
+K_sample: 8
+kernel_size: [9, 15]
+out_H: 4    #H_input/stride_H
+out_W: 225   #W_input/(stride_W*3)
+stride_H: 4
+stride_W: 8
+pc_distance: 0.75
+in_channels: 3
+mlp: [128, 64, 64]
+bn_decay: None
+H_input: 16
+W_input: 1800 
+
+#load pth path
+#load_run: /home/dell/visualnav-transformer_104/train/logs/nomad/nomad_2025_01_09_19_58_22
+
+datasets:
+#  recon:
+#    data_folder: /home/<username>/nomad_dataset/recon
+#    train: /home/<username>/data_splits/recon/train/ # path to train folder with traj_names.txt
+#    test: /home/<username>/data_splits/recon/test/ # path to test folder with traj_names.txt
+#    end_slack: 3 # because many trajectories end in collisions
+#    goals_per_obs: 1 # how many goals are sampled per observation
+#    negative_mining: True # negative mining from the ViNG paper (Shah et al.)
+#   go_stanford:
+#     data_folder: /home/dell/dataset/go_stanford # datasets/stanford_go_new
+#     train: /home/dell/visualnav-transformer/train/vint_train/data/data_splits/GoStanford2/train
+#     test: /home/dell/visualnav-transformer/train/vint_train/data/data_splits/GoStanford2/test
+#     end_slack: 0
+#     goals_per_obs: 2 # increase dataset size
+#     negative_mining: True
+#  cory_hall:
+#    data_folder: /home/<username>/nomad_dataset/cory_hall/
+#    train: /home/<username>/data_splits/cory_hall/train/
+#    test: /home/<username>/data_splits/cory_hall/test/
+#    end_slack: 3 # because many trajectories end in collisions
+#    goals_per_obs: 1
+#    negative_mining: True
+
+
+  # tartan_drive:
+  #   data_folder: /home/dell/dataset/tartan_drive2/
+  #   train: /home/dell/visualnav-transformer/train/vint_train/data/data_splits/tartan_drive/train/
+  #   test: /home/dell/visualnav-transformer/train/vint_train/data/data_splits/tartan_drive/test/
+  #   end_slack: 3 # because many trajectories end in collisions
+  #   goals_per_obs: 1
+  #   negative_mining: True
+
+
+  # sacson:
+  #   data_folder: /home/<username>/nomad_dataset/sacson/
+  #   train: /home/<username>/data_splits/sacson/train/
+  #  test: /home/<username>/data_splits/sacson/test/
+  #   end_slack: 3 # because many trajectories end in collisions
+  #   goals_per_obs: 1
+  #  negative_mining: True
+
+
+  # private datasets (uncomment if you have access)
+  # seattle:
+  #   data_folder: /home/<username>/nomad_dataset/seattle/
+  #   train: /home/<username>/data_splits/seattle/train/
+  #   test: /home/<username>/data_splits/seattle/test/
+  #   end_slack: 0
+  #   goals_per_obs: 1
+  #   negative_mining: True
+  # scand:
+  #    data_folder: /home/dell/dataset/scand/
+  #    train: /home/dell/visualnav-transformer/train/vint_train/data/data_splits/SCAND/train/
+  #    test: /home/dell/visualnav-transformer/train/vint_train/data/data_splits/SCAND/test/
+  #    end_slack: 0
+  #    goals_per_obs: 1
+  #    negative_mining: True
+
+ #   forest:
+ #    data_folder: /home/dell/Documents/dataset/forestrgb/
+ #    depth_data_folder: /home/dell/Documents/dataset/forestrgbd/
+ #    train: /home/dell/visualnav-transformer/train/vint_train/data/data_splpc_forest
+ #    negative_mining: True
+ # 
+    forest:
+     data_folder: /home/dell/Documents/dataset/pc_forest/
+     depth_data_folder: /home/dell/Documents/dataset/pc_forest/
+     train: /home/dell/visualnav-transformer_104/train/vint_train/data/data_splits/pc_forest/train/
+     test: /home/dell/visualnav-transformer_104/train/vint_train/data/data_splits/pc_forest/test/
+     end_slack: 0
+     goals_per_obs: 1
+     negative_mining: True
+
+
+    hbydata:
+     data_folder: /home/dell/Documents/dataset/hbydata/
+     depth_data_folder: /home/dell/Documents/dataset/hbydata/
+     train: /home/dell/visualnav-transformer_104/train/vint_train/data/data_splits/hbydata/train/
+     test: /home/dell/visualnav-transformer_104/train/vint_train/data/data_splits/hbydata/test/
+     end_slack: 0
+     goals_per_obs: 1
+     negative_mining: True
+
+
+# logging stuff
+## =0 turns off
+print_log_freq: 100 # in iterations
+image_log_freq: 1000 #0 # in iterations
+num_images_log: 8 #0 
+pairwise_test_freq: 0 # in epochs
+eval_fraction: 0.25
+wandb_log_freq: 10 # in iterations
+eval_freq: 1 # in epochs
